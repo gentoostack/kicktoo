@@ -1,8 +1,14 @@
-part vda 1 83 +
+part sda 1 83 100M
+part sda 2 82 2048M
+part sda 3 83 +
 
-format /dev/vda1 ext4
+format /dev/sda1 ext2
+format /dev/sda2 swap
+format /dev/sda3 ext4
 
-mountfs /dev/vda1 ext4 / noatime
+mountfs /dev/sda1 ext2 /boot
+mountfs /dev/sda2 swap
+mountfs /dev/sda3 ext4 / noatime
 
 # retrieve latest autobuild stage version for stage_uri
 [ "${arch}" == "x86" ]   && stage_latest $(uname -m)
@@ -19,14 +25,14 @@ initramfs_builder
 genkernel_kernel_opts    --loglevel=5
 genkernel_initramfs_opts --loglevel=5
 
-grub2_install /dev/vda
+grub2_install /dev/sda
 
 timezone                UTC
 rootpw                  a
 bootloader              grub
 keymap	                us # be-latin1 fr
-hostname                gentoo-cloud
-extra_packages          dhcpcd syslog-ng vim openssh iproute2
+hostname                gentoo
+extra_packages          dhcpcd # syslog-ng vim openssh
 
-rcadd                   sshd       default
-rcadd                   syslog-ng  default
+#rcadd                   sshd       default
+#rcadd                   syslog-ng  default
