@@ -29,11 +29,11 @@ genkernel_initramfs_opts --loglevel=5
 grub2_install /dev/vda
 
 timezone                UTC
-rootpw                  a
+rootpw                  cl0udAdmin
 bootloader              grub
 keymap	                us # be-latin1 fr
 hostname                gentoo-cloud
-extra_packages          dhcpcd syslog-ng vim openssh iproute2 acpid
+extra_packages          dhcpcd syslog-ng vim openssh iproute2 acpid curl
 
 rcadd                   sshd       default
 rcadd                   syslog-ng  default
