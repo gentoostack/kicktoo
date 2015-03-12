@@ -13,6 +13,13 @@ tree_type   snapshot    http://distfiles.gentoo.org/snapshots/portage-latest.tar
 cat /proc/config.gz | gzip -d > /dotconfig
 grep -v CONFIG_EXTRA_FIRMWARE /dotconfig > /dotconfig2 ; mv /dotconfig2 /dotconfig
 grep -v LZO                   /dotconfig > /dotconfig2 ; mv /dotconfig2 /dotconfig
+# Enable VirtIO options
+sed -i s/CONFIG_VIRTIO_PCI=m/CONFIG_VIRTIO_PCI=y/g /dotconfig
+sed -i s/CONFIG_VIRTIO_BALLOON=m/CONFIG_VIRTIO_BALLOON=y/g /dotconfig
+sed -i s/CONFIG_VIRTIO_BLK=m/CONFIG_VIRTIO_BLK=y/g /dotconfig
+sed -i s/CONFIG_VIRTIO_NET=m/CONFIG_VIRTIO_NET=y/g /dotconfig
+sed -i s/CONFIG_VIRTIO=m/CONFIG_VIRTIO=y/g /dotconfig
+sed -i s/CONFIG_VIRTIO_RING=m/CONFIG_VIRTIO_RING=y/g /dotconfig
 kernel_config_file       /dotconfig
 kernel_sources	         gentoo-sources
 initramfs_builder               
@@ -26,7 +33,8 @@ rootpw                  a
 bootloader              grub
 keymap	                us # be-latin1 fr
 hostname                gentoo-cloud
-extra_packages          dhcpcd syslog-ng vim openssh iproute2
+extra_packages          dhcpcd syslog-ng vim openssh iproute2 acpid
 
 rcadd                   sshd       default
 rcadd                   syslog-ng  default
+rcadd                   acpid      default
