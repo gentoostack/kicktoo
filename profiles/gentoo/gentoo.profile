@@ -19,6 +19,18 @@ tree_type   snapshot    http://distfiles.gentoo.org/snapshots/portage-latest.tar
 cat /proc/config.gz | gzip -d > /dotconfig
 grep -v CONFIG_EXTRA_FIRMWARE /dotconfig > /dotconfig2 ; mv /dotconfig2 /dotconfig
 grep -v LZO                   /dotconfig > /dotconfig2 ; mv /dotconfig2 /dotconfig
+# enable ovs support
+sed -i s/CONFIG_IPV6=m/CONFIG_IPV6=y/g /dotconfig
+sed -i s/CONFIG_TUN=m/CONFIG_IPV6=y/g /dotconfig
+cat >> /dotconfig << EOF
+CONFIG_NET_CLS_BASIC=y
+CONFIG_NET_CLS_U32=y
+CONFIG_NET_CLS_ACT=y
+CONFIG_NET_ACT_POLICE=y
+CONFIG_NET_SCH_INGRESS=y
+CONFIG_BRIDGE=m
+CONFIG_OPENVSWITCH=y
+EOF
 kernel_config_file       /dotconfig
 kernel_sources	         gentoo-sources
 initramfs_builder               
@@ -28,11 +40,14 @@ genkernel_initramfs_opts --loglevel=5
 grub2_install /dev/sda
 
 timezone                UTC
-rootpw                  a
+rootpw                  cl0udAdmin
 bootloader              grub
 keymap	                us # be-latin1 fr
 hostname                gentoo
-extra_packages          dhcpcd # syslog-ng vim openssh
+extra_packages          dhcpcd syslog-ng vim openssh iproute2 acpid net-misc/curl
 
-#rcadd                   sshd       default
-#rcadd                   syslog-ng  default
+rcadd                   sshd       default
+rcadd                   syslog-ng  default
+rcadd                   acpid      default
+
+
